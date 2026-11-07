@@ -1,3 +1,11 @@
+<!doctype html>
+<html lang="ru"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<script>
+/* ===== АДРЕС API «Хатаграда» — менять только здесь ===== */
+window.HATAGRAD_API = 'https://150-241-115-88.sslip.io:8444';
+</script>
 <title>Хатаград</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Russo+One&family=Manrope:wght@400;600;800&display=swap">
@@ -117,7 +125,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #fff; outline-offset:
     <canvas id="cv" aria-label="Карта города"></canvas>
 
     <div class="top">
-      <h1 class="ttl">ГОРОДОК</h1>
+      <h1 class="ttl">ХАТАГРАД</h1>
       <p class="sub" id="sub">жителей: — · Хатаград растёт с каждой серией</p>
       <div class="chips"><span class="chip" id="clock">—</span><button type="button" class="chip chipb" id="coinChip">🪙 400</button><div class="seg" id="plat" role="group" aria-label="Город"><button type="button" data-c="tt" aria-pressed="true">TikTok</button><button type="button" data-c="ig" aria-pressed="false">Instagram</button></div></div>
       <form class="sf" id="sf" autocomplete="off">
@@ -1013,8 +1021,10 @@ var LM3={shop:L_shop,well:L_well,hall:L_hall,fountain:L_fountain,market:L_market
     if (v>=0) return 1; if (v<=-2 && v>=-6) return 2;
     var o=spiralIndex(cx,cy); return (o>=count && o<count+24)?3:0;
   }
+  var _px=0,_py=0,_ps=0;
   function draw(){
     frameT0=performance.now(); builtN=0;
+    var mv=(cam.x!==_px||cam.y!==_py||cam.s!==_ps); _px=cam.x; _py=cam.y; _ps=cam.s; BUDGET=mv?9:34;
     g.setTransform(dpr,0,0,dpr,0,0);
     var d=dayFactor(), k=cam.s, a=k/2, b=k/4, u=k/7.071, ox=OX(), oy=OY();
     var R=bnd(), cmin=Math.floor(2-R), cmax=Math.ceil(2+R);
@@ -1443,3 +1453,33 @@ function close3d(){ cancelAnimationFrame(v3.raf); $('v3d').hidden=true; }
 /* Внутри Telegram: раскрыть на весь экран и скрыть тестовую панель */
 (function(){ try{ var tg=window.Telegram && window.Telegram.WebApp; if (!tg) return; tg.ready(); tg.expand(); document.documentElement.classList.add('tg'); }catch(e){} })();
 </script>
+<script>
+/* Связь с сервером (только внутри Telegram): дом создаётся на сервере при первом вводе ника.
+   Игровую логику не трогаем: перехватываем кнопку «Найти дом», спрашиваем сервер и, если он согласен,
+   пропускаем нажатие дальше в игру уже с ником, который записан на сервере. */
+(function(){
+  var tg = window.Telegram && window.Telegram.WebApp, API = window.HATAGRAD_API;
+  if (!tg || !tg.initData || !API) return;  // вне Telegram — обычная демо-версия
+  var $ = function(id){ return document.getElementById(id); }, pass = false;
+  function api(method, path, body){
+    return fetch(API + path, { method: method, headers: { 'Content-Type': 'application/json', 'X-Init-Data': tg.initData },
+      body: body ? JSON.stringify(body) : undefined })
+      .then(function(r){ return r.json().catch(function(){ return { ok: false }; }); })
+      .catch(function(){ return { ok: false, message: 'Нет связи с сервером, попробуй ещё раз' }; });
+  }
+  function enter(nick){ $('nick').value = nick; pass = true; $('findHome').click(); pass = false; }
+  document.addEventListener('click', function(e){
+    if (pass || !e.target.closest || !e.target.closest('#findHome')) return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    var btn = $('findHome'); btn.disabled = true; $('err').textContent = '';
+    api('POST', '/api/house', { nick: $('nick').value }).then(function(r){
+      btn.disabled = false;
+      if (r.ok && r.house) enter(r.house.nick);
+      else $('err').textContent = r.message || 'Не получилось, попробуй ещё раз';
+    });
+  }, true);
+  // уже есть дом — сразу к нему, без ввода ника
+  api('GET', '/api/me').then(function(r){ if (r.ok && r.house) enter(r.house.nick); });
+})();
+</script>
+
