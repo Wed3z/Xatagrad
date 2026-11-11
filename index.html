@@ -2,6 +2,7 @@
 <html lang="ru"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<script>window.HATAGRAD_API = 'https://150-241-115-88.sslip.io:8444';</script>
 <title>Хатаград</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Russo+One&family=Manrope:wght@400;600;800&display=swap">
@@ -116,8 +117,18 @@ button:focus-visible,input:focus-visible{outline:3px solid #fff; outline-offset:
 .chipb .ico,.chip .ico{filter:drop-shadow(0 1px 0 rgba(0,0,0,.35))}
 .brow{display:flex; gap:8px; flex-wrap:wrap}
 .shop-btn{background:#f5c518; color:#2b2140; border:3px solid #2b2140; font-size:15px; font-weight:800; padding:10px 16px; border-radius:14px; cursor:pointer; font-family:inherit}
+html:not(.dbg) .card{display:none}
+#shopB{display:none!important}
+.task-btn{background:#2f9e6b; color:#fff; border:3px solid #2b2140; font-size:15px; font-weight:800; padding:10px 16px; border-radius:14px; cursor:pointer; font-family:inherit}
+.tbadge{background:#f5c518; color:#2b2140; border-radius:999px; padding:2px 8px; margin-left:4px; font-size:13px}
+.trow{display:flex; flex-direction:column; gap:8px; background:#2a2150; border:2px solid #5b4a9a; border-radius:14px; padding:12px; margin-bottom:8px; color:#fff}
+.trow .tt{font-weight:800; font-size:16px}
+.trow .tr{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+.trow button{border:3px solid #2b2140; border-radius:12px; padding:8px 14px; font-weight:800; font-size:14px; cursor:pointer; font-family:inherit; background:#f5c518; color:#2b2140}
+.trow button.sec{background:#fff4c2}
+.trow.done{opacity:.7}
+.trow .rw{margin-left:auto; font-weight:800}
 .tg .stage{height:calc(100vh - 24px); height:calc(100dvh - 24px); max-height:none}
-.tg .card{display:none}
 </style>
 
 <div class="wrap">
@@ -127,7 +138,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #fff; outline-offset:
     <div class="top">
       <h1 class="ttl">ХАТАГРАД</h1>
       <p class="sub" id="sub">жителей: — · Хатаград растёт с каждой серией</p>
-      <div class="chips"><span class="chip" id="clock">—</span><span class="chip" id="coinChip"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10.5" fill="#e8a400" stroke="#8a5200" stroke-width="1.5"/><circle cx="12" cy="12" r="7.6" fill="#ffd84a" stroke="#c98500" stroke-width="1.2"/><path d="M8.2 9.2a5 5 0 0 1 4.6-2.4" fill="none" stroke="#fff7c2" stroke-width="1.6" stroke-linecap="round"/><rect x="10.8" y="8.4" width="2.4" height="7.2" rx="1.1" fill="#c98500"/></svg> 400</span><span class="chip" id="starChip" aria-label="Звёзды Telegram"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2l2.9 6.1 6.7.8-4.9 4.6 1.3 6.6L12 17l-6 3.3 1.3-6.6L2.4 9.1l6.7-.8z" fill="#ffc83a" stroke="#c77700" stroke-width="1.4" stroke-linejoin="round"/><path d="M12 5.2l1.6 3.5" fill="none" stroke="#fff7c2" stroke-width="1.4" stroke-linecap="round"/></svg> 0</span><div class="seg" id="plat" role="group" aria-label="Город"><button type="button" data-c="tt" aria-pressed="true">TikTok</button><button type="button" data-c="ig" aria-pressed="false">Instagram</button></div></div>
+      <div class="chips"><span class="chip" id="clock">—</span><span class="chip" id="coinChip"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10.5" fill="#e8a400" stroke="#8a5200" stroke-width="1.5"/><circle cx="12" cy="12" r="7.6" fill="#ffd84a" stroke="#c98500" stroke-width="1.2"/><path d="M8.2 9.2a5 5 0 0 1 4.6-2.4" fill="none" stroke="#fff7c2" stroke-width="1.6" stroke-linecap="round"/><rect x="10.8" y="8.4" width="2.4" height="7.2" rx="1.1" fill="#c98500"/></svg> 0</span><span class="chip" id="starChip" aria-label="Звёзды Telegram"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2l2.9 6.1 6.7.8-4.9 4.6 1.3 6.6L12 17l-6 3.3 1.3-6.6L2.4 9.1l6.7-.8z" fill="#ffc83a" stroke="#c77700" stroke-width="1.4" stroke-linejoin="round"/><path d="M12 5.2l1.6 3.5" fill="none" stroke="#fff7c2" stroke-width="1.4" stroke-linecap="round"/></svg> 0</span><div class="seg" id="plat" role="group" aria-label="Город"><button type="button" data-c="tt" aria-pressed="true">TikTok</button><button type="button" data-c="ig" aria-pressed="false">Instagram</button></div></div>
       <form class="sf" id="sf" autocomplete="off">
         <input type="text" id="nick2" maxlength="24" placeholder="твой ник" aria-label="Твой ник" autocapitalize="off">
         <button type="submit" class="btn-main">Найти</button>
@@ -146,7 +157,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #fff; outline-offset:
         <div><h2 id="iNick">—</h2><p id="iLine">—</p></div>
         <div class="sbtns"><button type="button" class="b3" id="shopB" hidden>Магазин</button><button type="button" class="b3" id="v3Btn">Покрутить в 3D</button><button type="button" class="x" id="sheetX" aria-label="Закрыть">Закрыть</button></div>
       </div>
-      <div class="brow"><button type="button" class="shop-btn" id="shopMain"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h16l-1.3 11H5.3z" fill="#fff4c2" stroke="#2b2140" stroke-width="1.8" stroke-linejoin="round"/><path d="M8.5 9V7a3.5 3.5 0 0 1 7 0v2" fill="none" stroke="#2b2140" stroke-width="1.8" stroke-linecap="round"/></svg> Магазин</button><button type="button" class="vote-btn" id="voteBtn">Что добавить на карту?</button></div>
+      <div class="brow"><button type="button" class="shop-btn" id="shopMain"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h16l-1.3 11H5.3z" fill="#fff4c2" stroke="#2b2140" stroke-width="1.8" stroke-linejoin="round"/><path d="M8.5 9V7a3.5 3.5 0 0 1 7 0v2" fill="none" stroke="#2b2140" stroke-width="1.8" stroke-linecap="round"/></svg> Магазин</button><button type="button" class="task-btn" id="taskBtn">Задания <span class="tbadge">+50</span></button><button type="button" class="vote-btn" id="voteBtn">Что добавить на карту?</button></div>
     </div>
 
     <div class="overlay" id="landing">
@@ -154,7 +165,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #fff; outline-offset:
         <h2>Добро пожаловать в Хатаград</h2>
         <small>Каждому жителю достаётся развалившаяся хижина. Зарабатывай монеты и строй жизнь: дом, машина, забор, питомец.</small>
         <div class="seg" id="plat2" role="group" aria-label="Город"><button type="button" data-c="tt" aria-pressed="true">TikTok</button><button type="button" data-c="ig" aria-pressed="false">Instagram</button></div>
-        <input type="text" id="nick" maxlength="24" placeholder="твой ник в TikTok" value="player_one" aria-label="Ник в TikTok" autocapitalize="off">
+        <input type="text" id="nick" maxlength="24" placeholder="твой ник в TikTok" value="сын маминой подруги" aria-label="Ник в TikTok" autocapitalize="off">
         <p class="err" id="err" role="alert"></p>
         <button type="button" class="btn-dark" id="findHome">Найти мой дом</button>
         <button type="button" class="lnk" id="justWalk">Просто погулять по городу</button>
@@ -175,6 +186,15 @@ button:focus-visible,input:focus-visible{outline:3px solid #fff; outline-offset:
         <p class="note2" id="shopNote"></p>
         <div class="lvgrid" id="lvGrid"></div>
         <button type="button" class="btn-main" id="shopX">Закрыть</button>
+      </div>
+    </div>
+    <div class="overlay" id="taskBox" hidden>
+      <div class="vote">
+        <h2>Задания</h2>
+        <p>Выполняй задания и получай монеты.</p>
+        <div id="tasks"></div>
+        <p id="taskNote"></p>
+        <button type="button" class="btn-main" id="taskClose">Закрыть</button>
       </div>
     </div>
     <div class="overlay" id="voteBox" hidden>
@@ -1243,8 +1263,48 @@ var LM3={shop:L_shop,well:L_well,hall:L_hall,fountain:L_fountain,market:L_market
   $('voteBtn').addEventListener('click', function(){ renderOpts(); $('voteBox').hidden=false; });
   $('voteClose').addEventListener('click', function(){ $('voteBox').hidden=true; });
 
+  /* ---------- задания ---------- */
+  var API_URL = (window.HATAGRAD_API||'');  /* адрес сервера Хатаграда, например https://150-241-115-88.sslip.io:8444 (пропишет W3) */
+  var TASKS=[{id:'sub',t:'Подписаться на канал @xatagrad',r:50,link:'https://t.me/xatagrad'}], tasksDone={};
+  try { tasksDone=JSON.parse(localStorage.getItem('hg_tasks')||'{}')||{}; } catch(e){ tasksDone={}; }
+  function saveTasks(){ try { localStorage.setItem('hg_tasks', JSON.stringify(tasksDone)); } catch(e){} }
+  function openLink(u){ try { var tg=window.Telegram&&window.Telegram.WebApp; if (tg && tg.openTelegramLink && /^https:\/\/t\.me\//.test(u)){ tg.openTelegramLink(u); return; } } catch(e){} window.open(u,'_blank'); }
+  function renderTasks(){
+    var box=$('tasks'); box.textContent='';
+    TASKS.forEach(function(k){
+      var row=document.createElement('div'); row.className='trow'+(tasksDone[k.id]?' done':'');
+      var t=document.createElement('div'); t.className='tt'; t.textContent=k.t; row.appendChild(t);
+      var r=document.createElement('div'); r.className='tr';
+      if (tasksDone[k.id]){ var d=document.createElement('span'); d.textContent='Выполнено'; r.appendChild(d); }
+      else {
+        var b1=document.createElement('button'); b1.type='button'; b1.className='sec'; b1.textContent='Открыть канал'; b1.addEventListener('click', function(){ openLink(k.link); }); r.appendChild(b1);
+        var b2=document.createElement('button'); b2.type='button'; b2.textContent='Проверить'; b2.addEventListener('click', function(){ checkTask(k); }); r.appendChild(b2);
+      }
+      var rw=document.createElement('span'); rw.className='rw'; rw.innerHTML='+'+k.r+' '+COIN_SVG; r.appendChild(rw);
+      row.appendChild(r); box.appendChild(row);
+    });
+  }
+  function giveTask(k, coins){ tasksDone[k.id]=1; saveTasks(); if (typeof coins==='number') CITIES[city].coins=coins; else CITIES[city].coins+=k.r; setCoins(); renderTasks(); badge(); $('taskNote').textContent='Готово! Начислено '+k.r+' монет.'; }
+  function badge(){ var bd=$('taskBtn').querySelector('.tbadge'); if (bd) bd.style.display=TASKS.every(function(k){ return tasksDone[k.id]; })?'none':''; }
+  badge();
+  function checkTask(k){
+    var note=$('taskNote');
+    if (!API_URL){
+      if (document.documentElement.classList.contains('dbg')){ giveTask(k); return; }
+      note.textContent='Проверка заработает, когда игра подключится к серверу.'; return;
+    }
+    note.textContent='Проверяю…';
+    var init=''; try { init=(window.Telegram&&window.Telegram.WebApp&&window.Telegram.WebApp.initData)||''; } catch(e){}
+    fetch(API_URL+'/api/task/check', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({task:k.id, initData:init})})
+      .then(function(r){ return r.json(); })
+      .then(function(j){ if (j && j.ok) giveTask(k, typeof j.coins==='number'?j.coins:undefined); else note.textContent=(j&&j.message)||'Подписка не найдена. Подпишись на канал и нажми «Проверить» ещё раз.'; })
+      .catch(function(){ note.textContent='Нет связи с сервером. Попробуй позже.'; });
+  }
+  $('taskBtn').addEventListener('click', function(){ $('taskNote').textContent=''; renderTasks(); $('taskBox').hidden=false; });
+  $('taskClose').addEventListener('click', function(){ $('taskBox').hidden=true; });
+
   /* ---------- нагрузка и время ---------- */
-  var city='tt', CITIES={tt:{name:'TikTok',n:500,extra:[],mine:'player_one',coins:400,lv:null}, ig:{name:'Instagram',n:220,extra:[],mine:'player_two',coins:400,lv:null}};
+  var city='tt', CITIES={tt:{name:'Хатаград',n:0,extra:[],mine:'сын маминой подруги',coins:0,lv:null}, ig:{name:'Хатаград',n:0,extra:[],mine:'сын маминой подруги',coins:0,lv:null}};
   function loadCity(c,silent){
     city=c; var C=CITIES[c];
     resetCity(C.n,c); spIdx=null;
@@ -1255,7 +1315,7 @@ var LM3={shop:L_shop,well:L_well,hall:L_hall,fountain:L_fountain,market:L_market
     $('nick').placeholder='твой ник'; $('nick2').placeholder='твой ник';
     ['plat','plat2'].forEach(function(id){ Array.prototype.forEach.call($(id).querySelectorAll('button'), function(b){ b.setAttribute('aria-pressed', String(b.dataset.c===c)); }); });
     Array.prototype.forEach.call(document.querySelectorAll('#pops button'), function(b){ b.setAttribute('aria-pressed', String(+b.dataset.n===C.n)); });
-    cam.x=2.5; cam.y=2.5; cam.s=C.n>=5000?6:34; anim=null;
+    cam.x=2.5; cam.y=2.5; cam.s=C.n>=5000?6:(C.n<30?48:34); anim=null; if (C.n<30 && mineIdx>=0){ cam.x=hs.x[mineIdx]+0.3; cam.y=hs.y[mineIdx]+1.1; }
     if (!silent && $('landing').hidden) setTimeout(function(){ goTo(mineIdx); }, 300);
   }
   function setPop(n){ CITIES[city].n=n; loadCity(city); if (!$('landing').hidden) return; cam.s=n>=5000?6:20; }
@@ -1445,12 +1505,13 @@ function close3d(){ cancelAnimationFrame(v3.raf); $('v3d').hidden=true; }
     return {start:start,stop:stop};
   })();
 
+  if (/[?&]debug/.test(location.search)) document.documentElement.classList.add('dbg');
   resize(); loadCity('tt',true);
   loop();
 })();
 </script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script>
-/* Внутри Telegram: раскрыть на весь экран и скрыть тестовую панель */
+/* Внутри Telegram: раскрыть на весь экран */
 (function(){ try{ var tg=window.Telegram && window.Telegram.WebApp; if (!tg) return; tg.ready(); tg.expand(); document.documentElement.classList.add('tg'); }catch(e){} })();
 </script>
