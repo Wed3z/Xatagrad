@@ -3,6 +3,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <script>window.HATAGRAD_API = 'https://150-241-115-88.sslip.io:8444';</script>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>(function(){try{var tg=window.Telegram&&window.Telegram.WebApp; if(tg&&tg.initData){document.documentElement.classList.add('tg');}}catch(e){}})();</script>
 <title>Хатаград</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Russo+One&family=Manrope:wght@400;600;800&display=swap">
@@ -1234,10 +1236,10 @@ var LM3={shop:L_shop,well:L_well,hall:L_hall,fountain:L_fountain,market:L_market
 
   /* ---------- ввод ника ---------- */
   function clean(v){ v=(v||'').trim().replace(/^@+/,''); return /^[\p{L}\p{N}_.\-]{1,24}$/u.test(v)?v:''; }
-  function join(v){
+  var join=function(v){
     mineNick=v; var i=nickMap.get(v.toLowerCase()); if (i===undefined){ i=addResident(v); CITIES[city].extra.push(v); } CITIES[city].mine=v; mineIdx=i; saveMine();
     $('landing').hidden=true; $('nick2').value=v; goTo(i);
-  }
+  };
   $('findHome').addEventListener('click', function(){
     var v=clean($('nick').value); if (!v){ $('err').textContent='Нужен ник: буквы, цифры, точка, дефис или подчёркивание, до 24 знаков.'; return; }
     $('err').textContent=''; join(v);
@@ -1245,6 +1247,35 @@ var LM3={shop:L_shop,well:L_well,hall:L_hall,fountain:L_fountain,market:L_market
   $('nick').addEventListener('keydown', function(e){ if (e.key==='Enter'){ e.preventDefault(); $('findHome').click(); } });
   $('justWalk').addEventListener('click', function(){ $('landing').hidden=true; flyTo(2.5,2.5,36,600); });
   $('sf').addEventListener('submit', function(e){ e.preventDefault(); var v=clean($('nick2').value); if (!v) return; var i=nickMap.get(v.toLowerCase()); if (i===undefined){ i=addResident(v); CITIES[city].extra.push(v); } CITIES[city].mine=v; mineIdx=i; saveMine(); goTo(i); });
+
+  /* ---------- сервер Хатаграда ---------- */
+  var INIT=''; try { var _tg=window.Telegram&&window.Telegram.WebApp; if (_tg){ INIT=_tg.initData||''; try{ _tg.ready(); _tg.expand(); }catch(e){} } } catch(e){}
+  var API=(window.HATAGRAD_API||''), LIVE=!!(API && INIT);
+  function api(path, body){
+    var o={method:body?'POST':'GET', headers:{'X-Init-Data':INIT}};
+    if (body){ o.headers['Content-Type']='application/json'; o.body=JSON.stringify(body); }
+    return fetch(API+path, o).then(function(r){ return r.json().catch(function(){ return {ok:false,error:'http_'+r.status}; }); });
+  }
+  var ERR={bad_nick:'Ник: буквы, цифры, точка, дефис или подчёркивание, до 24 знаков.', not_subscribed:'Сначала подпишись на канал @xatagrad, потом возвращайся.', nick_taken:'Этот ник уже занят. Попробуй другой.', change_used:'Ник можно сменить только один раз, ты уже сменил.', check_failed:'Не получилось проверить подписку. Попробуй ещё раз через минуту.', bad_init_data:'Открой игру из бота @xatagrad_bot.'};
+  function errText(j){ var e=j&&j.error; return ERR[e]||(j&&j.message)||'Нет связи с сервером. Попробуй позже.'; }
+  function nickOf(x){ return typeof x==='string'?x:(x&&(x.nick||x.name))||''; }
+  function addServerResidents(list){ (list||[]).forEach(function(x){ var n=nickOf(x); if (n && clean(n) && !nickMap.has(n.toLowerCase())) addResident(n); }); }
+  function applyMine(n){ if (!n) return; var i=nickMap.get(n.toLowerCase()); if (i===undefined){ i=addResident(n); } CITIES[city].mine=n; mineNick=n; mineIdx=i; saveMine(); $('nick2').value=n; $('nick').value=n; $('landing').hidden=true; goTo(i); }
+  var origJoin=join;
+  join=function(v){
+    if (!LIVE){ if (API){ $('err').textContent=ERR.bad_init_data; return; } origJoin(v); return; }
+    $('err').textContent='Строим дом…'; $('findHome').disabled=true;
+    api('/api/house',{nick:v}).then(function(j){
+      $('findHome').disabled=false;
+      if (j&&j.ok){ $('err').textContent=''; var h=j.house||{}; var n=nickOf(h)||v; if (!nickMap.has(n.toLowerCase())){ addResident(n); } applyMine(n); }
+      else $('err').textContent=errText(j);
+    }).catch(function(){ $('findHome').disabled=false; $('err').textContent=errText(null); });
+  };
+  if (LIVE){
+    api('/api/residents').then(function(j){ addServerResidents(Array.isArray(j)?j:(j.residents||j.houses||[])); return api('/api/me'); })
+    .then(function(j){ var h=j&&(j.house||j.me); var n=nickOf(h); if (j&&j.ok!==false&&n) applyMine(n); })
+    .catch(function(){});
+  } else if (API){ $('err').textContent=ERR.bad_init_data; }
 
   /* ---------- голосование ---------- */
   var OPTS=[{n:'Каток',v:0},{n:'Парк с каруселью',v:0},{n:'Пожарная станция',v:0},{n:'Кинотеатр',v:0},{n:'Стадион',v:0}], voted=-1;
@@ -1295,9 +1326,9 @@ var LM3={shop:L_shop,well:L_well,hall:L_hall,fountain:L_fountain,market:L_market
     }
     note.textContent='Проверяю…';
     var init=''; try { init=(window.Telegram&&window.Telegram.WebApp&&window.Telegram.WebApp.initData)||''; } catch(e){}
-    fetch(API_URL+'/api/task/check', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({task:k.id, initData:init})})
+    fetch(API_URL+'/api/task/check', {method:'POST', headers:{'Content-Type':'application/json','X-Init-Data':init}, body:JSON.stringify({task:k.id, initData:init})})
       .then(function(r){ return r.json(); })
-      .then(function(j){ if (j && j.ok) giveTask(k, typeof j.coins==='number'?j.coins:undefined); else note.textContent=(j&&j.message)||'Подписка не найдена. Подпишись на канал и нажми «Проверить» ещё раз.'; })
+      .then(function(j){ if (j && j.ok && j.already){ tasksDone[k.id]=1; saveTasks(); renderTasks(); badge(); note.textContent='Это задание уже выполнено.'; } else if (j && j.ok) giveTask(k, typeof j.coins==='number'?j.coins:undefined); else if (j && j.error==='bad_init_data') note.textContent=ERR.bad_init_data; else note.textContent=(j&&j.message)||'Подписка не найдена. Подпишись на канал и нажми «Проверить» ещё раз.'; })
       .catch(function(){ note.textContent='Нет связи с сервером. Попробуй позже.'; });
   }
   $('taskBtn').addEventListener('click', function(){ $('taskNote').textContent=''; renderTasks(); $('taskBox').hidden=false; });
@@ -1509,9 +1540,4 @@ function close3d(){ cancelAnimationFrame(v3.raf); $('v3d').hidden=true; }
   resize(); loadCity('tt',true);
   loop();
 })();
-</script>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-<script>
-/* Внутри Telegram: раскрыть на весь экран */
-(function(){ try{ var tg=window.Telegram && window.Telegram.WebApp; if (!tg) return; tg.ready(); tg.expand(); document.documentElement.classList.add('tg'); }catch(e){} })();
 </script>
